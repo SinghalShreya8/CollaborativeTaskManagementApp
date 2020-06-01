@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Task Management</string>
+    <string name="tab_text_1">Ongoing Task</string>
+    <string name="tab_text_2">Accept/Reject Task</string>
+    <string name="description">Create a collaborative task management app using android studio. Use Java as frontend language. Use DyanmoDB for storage at backend. </string>
+    <string name="startdate">05-04-2020</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
