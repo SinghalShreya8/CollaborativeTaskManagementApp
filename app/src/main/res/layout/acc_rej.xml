@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/new_card_view"
+        android:layout_width="350dp"
+        android:layout_height="176dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp"
+
+        card_view:cardBackgroundColor="@color/cardview_light_background"
+        card_view:cardCornerRadius="4dp"
+        card_view:cardElevation="15dp"
+        card_view:contentPadding="10dp"
+        tools:ignore="MissingClass">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="153dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/accept"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+
+                    android:layout_marginRight="30dp"
+
+                    android:backgroundTint="@android:color/darker_gray"
+                    android:text="Accept"
+                    android:textSize="18sp" />
+
+                <Button
+                    android:id="@+id/reject"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+
+                    android:layout_marginRight="30dp"
+
+                    android:backgroundTint="@android:color/darker_gray"
+                    android:text="Reject"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/deadline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/titleTextView"
+                android:text="Deadline : "
+                android:textSize="20sp">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/dateTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/titleTextView"
+                android:layout_toRightOf="@id/deadline"
+                android:textSize="20sp"></TextView>
+
+            <TextView
+                android:id="@+id/assign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/deadline"
+                android:text="Assigned By :"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/assignedByTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/dateTextView"
+                android:layout_toRightOf="@id/assign"
+                android:textSize="20sp"></TextView>
+
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:shadowColor="#00ccff"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2"
+                android:textColor="#4AA5D9"
+                android:textSize="34sp"
+                android:textStyle="italic" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@+id/titleTextView"
+                android:background="#c0c0c0" />
+
+        </RelativeLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+</LinearLayout>
