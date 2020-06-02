@@ -34,7 +34,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 Ongoing_task  t=new Ongoing_task();
                 return  t;
             case 1:
-                Ongoing_task t1=new Ongoing_task();
+                Accept_Reject t1 = new Accept_Reject();
                 return t1;
         }
         return PlaceholderFragment.newInstance(position + 1);
