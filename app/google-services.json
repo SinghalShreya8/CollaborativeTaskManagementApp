@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "932724825892",
+    "firebase_url": "https://collabplus-53eea.firebaseio.com",
+    "project_id": "collabplus-53eea",
+    "storage_bucket": "collabplus-53eea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932724825892:android:724846c638cbaa66e6ddb1",
+        "android_client_info": {
+          "package_name": "com.example.taskmanagement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "932724825892-t0vl92pqbsmjhcqc8j4fvkv7qti5ak3u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.taskmanagement",
+            "certificate_hash": "035a6a190a2188416f0f26462d40617d86249585"
+          }
+        },
+        {
+          "client_id": "932724825892-t1nr7cjbtv9dbufjrth84lc1rd1g0obh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAd0KUjOPQr2SdO2tcfM4Sj8K-c8043ZGQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "932724825892-ghfkfft7914vforq4re6crp09o3cpasd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
