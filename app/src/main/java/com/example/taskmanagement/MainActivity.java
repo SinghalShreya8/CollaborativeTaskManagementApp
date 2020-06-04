@@ -2,12 +2,15 @@ package com.example.taskmanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.example.taskmanagement.ui.main.Ongoing_task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -39,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -56,13 +61,14 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         switch (id){
             case R.id.action_Profile:
-                Toast.makeText(getApplicationContext(),"Profile",Toast.LENGTH_LONG).show();
+                Intent i = new Intent(MainActivity.this,Profile.class);
+                startActivity(i);
                 return true;
             case R.id.action_Logout:
-                Toast.makeText(getApplicationContext(),"Logout",Toast.LENGTH_LONG).show();
+                Intent i2 = new Intent(MainActivity.this,signIn.class);
+                startActivity(i2);
                 return true;
             case R.id.action_completed_tasks:
-                Toast.makeText(getApplicationContext(),"Completed tasks",Toast.LENGTH_LONG).show();
                 return true;
             case R.id.action_settings:
                 return true;

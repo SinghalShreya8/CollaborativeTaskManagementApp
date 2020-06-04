@@ -2,6 +2,8 @@ package com.example.taskmanagement;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,12 +11,18 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.text.InputType;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 public class CreateTask extends AppCompatActivity {
 
@@ -24,6 +32,8 @@ public class CreateTask extends AppCompatActivity {
     String desc;
     String sd,ed;
     DatePickerDialog picker;
+    AutoCompleteTextView auto_mail;
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$", Pattern.CASE_INSENSITIVE);
 
     TextView textFile;
     private static final int PICKFILE_RESULT_CODE = 1;
@@ -38,6 +48,8 @@ public class CreateTask extends AppCompatActivity {
         end=findViewById(R.id.end);
         b1= findViewById(R.id.b1);
         b2= findViewById(R.id.b2);
+        auto_mail=(AutoCompleteTextView)findViewById(R.id.autoemail);
+        addAdapterToViews();
         start.setInputType(InputType.TYPE_NULL);
         end.setInputType(InputType.TYPE_NULL);
         start.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +110,22 @@ public class CreateTask extends AppCompatActivity {
 
 
     }
+
+    private void addAdapterToViews() {
+
+        Account[] accounts = AccountManager.get(this).getAccounts();
+        Set<String> emailSet = new HashSet<String>();
+        for (Account account : accounts) {
+            if (EMAIL_PATTERN.matcher(account.name).matches()) {
+                emailSet.add(account.name);
+            }
+        }
+        auto_mail.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, new ArrayList<String>(emailSet)));
+
+    }
+
+
+
     public void create_task(){
             tit = title.getText().toString();
             desc = description.getText().toString();

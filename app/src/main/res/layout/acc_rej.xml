@@ -72,7 +72,9 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/titleTextView"
                 android:layout_toRightOf="@id/deadline"
-                android:textSize="20sp"></TextView>
+                android:textSize="20sp">
+
+            </TextView>
 
             <TextView
                 android:id="@+id/assign"
@@ -80,7 +82,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/deadline"
                 android:text="Assigned By :"
-                android:textSize="20sp" />
+                android:textSize="20sp" >
+            </TextView>
 
             <TextView
                 android:id="@+id/assignedByTextView"
@@ -88,7 +91,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/dateTextView"
                 android:layout_toRightOf="@id/assign"
-                android:textSize="20sp"></TextView>
+                android:textSize="20sp">
+            </TextView>
 
             <TextView
                 android:id="@+id/titleTextView"
@@ -100,7 +104,8 @@
                 android:shadowRadius="2"
                 android:textColor="#4AA5D9"
                 android:textSize="34sp"
-                android:textStyle="italic" />
+                android:textStyle="italic" >
+            </TextView>
 
             <View
                 android:layout_width="match_parent"
