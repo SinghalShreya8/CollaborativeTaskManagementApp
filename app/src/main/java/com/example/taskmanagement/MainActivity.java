@@ -1,5 +1,6 @@
 package com.example.taskmanagement;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -10,11 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.taskmanagement.ui.main.SectionsPagerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,6 +62,14 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Profile",Toast.LENGTH_LONG).show();
                 return true;
             case R.id.action_Logout:
+                Button signOut_button ;
+                signOut_button = (Button) findViewById(R.id.action_Logout);
+                signOut_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        logOut();
+                    }
+                });
                 Toast.makeText(getApplicationContext(),"Logout",Toast.LENGTH_LONG).show();
                 return true;
             case R.id.action_completed_tasks:
@@ -71,5 +82,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    private void logOut(){
+        FirebaseAuth.getInstance().signOut();
+        Toast.makeText(this,"log out successful",Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(MainActivity.this, signIn.class);
     }
 }
