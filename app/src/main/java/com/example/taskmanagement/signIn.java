@@ -84,6 +84,8 @@ public class signIn extends AppCompatActivity {
         }
 
     }
+    //for authenticating credentials
+    // use this to sync profile details
     private void FirebaseGoogleAuth(GoogleSignInAccount acct){
         AuthCredential authCredential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(authCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
