@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.taskmanagement.MainActivity">
+    <item
+        android:id="@+id/action_Profile"
+        android:orderInCategory="100"
+        android:title="Profile"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_completed_tasks"
+        android:orderInCategory="100"
+        android:title="Completed Tasks"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_Logout"
+        android:orderInCategory="100"
+        android:title="Logout"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="Settings"
+        app:showAsAction="never" />
+</menu>
