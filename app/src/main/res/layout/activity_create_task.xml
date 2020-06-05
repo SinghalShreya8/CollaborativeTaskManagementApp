@@ -28,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20dp"
+        android:textStyle="bold"
         android:text="Description" />
 
     <EditText
@@ -42,11 +43,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/attachheading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="20dp"
+        android:textStyle="bold"
         android:text="Attach Document"/>
+        <TextView
+            android:id="@+id/fileattached"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20dp"
+            android:layout_below="@+id/attachheading"/>
 
     <Button
         android:id="@+id/b1"
@@ -57,19 +65,19 @@
         android:textColor="@android:color/white"
         android:background="@color/design_default_color_primary"/>
     </RelativeLayout>
-    <EditText
-        android:id="@+id/start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Start Date"/>
 
     <EditText
         android:id="@+id/end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="End Date" />
+        android:hint="Deadline Date" />
+    <EditText
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Deadline Time "/>
 
     <Button
         android:id="@+id/b2"

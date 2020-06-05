@@ -3,14 +3,15 @@ package com.example.taskmanagement;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.taskmanagement.ui.main.Ongoing_task;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -65,8 +66,17 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
                 return true;
             case R.id.action_Logout:
+                GoogleSignInOptions gso = new GoogleSignInOptions.
+                        Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
+                        build();
+
+                GoogleSignInClient googleSignInClient= GoogleSignIn.getClient(this,gso);
+                googleSignInClient.signOut();
                 Intent i2 = new Intent(MainActivity.this,signIn.class);
+                i2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                Toast.makeText(MainActivity.this,"Logged out successfully", Toast.LENGTH_SHORT).show();
                 startActivity(i2);
+
                 return true;
             case R.id.action_completed_tasks:
                 return true;
