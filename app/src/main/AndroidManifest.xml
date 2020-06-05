@@ -13,6 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ShowProfile"
+                  android:parentActivityName=".MainActivity"/>
         <activity android:name=".signIn">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,21 +22,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CreateTask"
-                  android:parentActivityName=".MainActivity"/>
-        <activity android:name=".Profile"
-            android:parentActivityName=".MainActivity"/>
-        <activity android:name=".ui.main.Taskdetail"
-                  android:parentActivityName=".MainActivity"/>
-        <activity android:name=".ui.main.Reason"
-                  android:parentActivityName=".MainActivity"/>
-
+        <activity
+            android:name=".CreateTask"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".Profile"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".ui.main.Taskdetail"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".ui.main.Reason"
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

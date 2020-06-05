@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
+        android:gravity="center"
         android:padding="20dip"
         android:background="@drawable/back"
-        tools:context=".CreateTask">
+        tools:context=".Profile">
 
         <ImageView
+            android:id="@+id/imageview"
             android:layout_marginTop="45dp"
             android:layout_gravity="center_horizontal"
-            android:layout_width="150dp"
+            android:layout_width="200dp"
             android:layout_height="150dp"
             android:layout_margin="20dp"
-            />
+            android:clickable="true"
+            android:background="#000000"
+            android:onClick="ChooseImage"
+            android:focusable="true" />
 
         <EditText
             android:id="@+id/name"
@@ -32,35 +38,36 @@
         android:layout_height="46dp"
         android:ems="10"
         android:layout_marginBottom="20dp"
-        android:inputType="textPersonName"
+        android:inputType="textEmailAddress"
         android:hint="Email" />
 
 
         <EditText
-            android:id="@+id/post"
+            android:id="@+id/number"
             android:layout_width="match_parent"
             android:layout_height="46dp"
             android:ems="10"
             android:layout_marginBottom="20dp"
-            android:inputType="textPersonName"
-            android:hint="Post" />
+            android:inputType="number"
+            android:hint="Mobile Number" />
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
             android:textSize="20dp"
-            android:text="About me" />
+            android:inputType="textPersonName"
+            android:hint="Post" />
 
         <EditText
-            android:id="@+id/about_me"
+            android:id="@+id/about"
             android:layout_width="match_parent"
-            android:layout_height="115dp"
+            android:layout_height="45dp"
             android:ems="10"
-            android:inputType="textMultiLine"
+            android:inputType="textShortMessage"
             android:layout_marginBottom="20dp"
-            android:text="about me" />
+            android:hint="About me" />
 
         <Button
             android:id="@+id/b2"
@@ -68,7 +75,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="15dp"
-            android:text="Save"
-            android:textColor="@android:color/white" />
+            android:text="Save Profile"
+            android:textColor="@android:color/black" />
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/colorPrimary"
+            android:visibility="invisible"/>
 
     </LinearLayout>
