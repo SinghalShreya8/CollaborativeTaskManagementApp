@@ -6,8 +6,12 @@ import android.os.Bundle;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
+
+import androidx.annotation.NonNull;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,13 +23,20 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.taskmanagement.ui.main.SectionsPagerAdapter;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    DocumentReference documentReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        documentReference = db.collection("user").document("profile");
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
@@ -62,9 +73,19 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         switch (id){
             case R.id.action_Profile:
-                Intent i = new Intent(MainActivity.this,Profile.class);
-                startActivity(i);
-                return true;
+                documentReference.get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.getResult().exists()){
+                                    Intent intent = new Intent(MainActivity.this,ShowProfile.class);
+                                    startActivity(intent);
+                                }else {
+                                    Intent i = new Intent(MainActivity.this,Profile.class);
+                                    startActivity(i);
+                                }
+                            }
+                        });
             case R.id.action_Logout:
                 GoogleSignInOptions gso = new GoogleSignInOptions.
                         Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).
