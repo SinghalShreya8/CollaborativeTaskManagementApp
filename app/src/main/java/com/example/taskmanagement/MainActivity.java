@@ -73,19 +73,9 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         switch (id){
             case R.id.action_Profile:
-                documentReference.get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.getResult().exists()){
-                                    Intent intent = new Intent(MainActivity.this,ShowProfile.class);
-                                    startActivity(intent);
-                                }else {
-                                    Intent i = new Intent(MainActivity.this,Profile.class);
-                                    startActivity(i);
-                                }
-                            }
-                        });
+                Intent intent = new Intent(MainActivity.this,ShowProfile.class);
+                startActivity(intent);
+                return true;
             case R.id.action_Logout:
                 GoogleSignInOptions gso = new GoogleSignInOptions.
                         Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).

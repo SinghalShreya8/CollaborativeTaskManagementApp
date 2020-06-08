@@ -21,7 +21,8 @@
             android:clickable="true"
             android:background="#000000"
             android:onClick="ChooseImage"
-            android:focusable="true" />
+            android:focusable="true"
+            tools:ignore="OnClick" />
 
         <EditText
             android:id="@+id/name"
@@ -51,7 +52,7 @@
             android:inputType="number"
             android:hint="Mobile Number" />
 
-        <TextView
+        <EditText
             android:id="@+id/post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

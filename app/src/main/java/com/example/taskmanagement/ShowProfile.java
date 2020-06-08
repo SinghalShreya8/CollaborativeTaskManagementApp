@@ -1,93 +1,111 @@
 package com.example.taskmanagement;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-public class ShowProfile extends AppCompatActivity {
+import javax.annotation.Nullable;
 
-    FirebaseStorage firebaseStorage;
+public class ShowProfile extends AppCompatActivity {
+    private static final int GALLERY_INTENT_CODE = 1023 ;
+    TextView viewname,viewemail,viewnumber,viewpost,viewabout;
+    FirebaseAuth fAuth;
+    FirebaseFirestore fStore;
+    String userId;
+    Button editProfile;
+    FirebaseUser user;
+    ImageView profileImage;
     StorageReference storageReference;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    DocumentReference documentReference;
-    ImageView imageView;
-    TextView editname , editemail , editnumber , editpost , editabout;
-    FloatingActionButton floatingActionButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_profile);
-        floatingActionButton = findViewById(R.id.floatingbtnsp);
-        editname = findViewById(R.id.namesp);
-        editemail = findViewById(R.id.emailsp);
-        editnumber = findViewById(R.id.numbersp);
-        editpost = findViewById(R.id.postsp);
-        editabout = findViewById(R.id.aboutsp);
-        imageView = findViewById(R.id.imageViewsp);
-        documentReference = db.collection("user").document("profile");
-        storageReference = firebaseStorage.getInstance().getReference("profile images");
+        viewnumber = findViewById(R.id.numbersp);
+        viewname = findViewById(R.id.namesp);
+        viewemail    = findViewById(R.id.emailsp);
+        viewpost    = findViewById(R.id.postsp);
+        viewabout  = findViewById(R.id.aboutsp);
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+        profileImage = findViewById(R.id.imageViewsp);
+        editProfile = findViewById(R.id.changeprofile);
+
+
+        fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+
+        StorageReference profileRef = storageReference.child("users/"+fAuth.getCurrentUser().getUid()+"/profile images.jpg");
+        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(ShowProfile.this,Profile.class);
-                startActivity(intent);
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(profileImage);
             }
         });
 
+        userId = fAuth.getCurrentUser().getUid();
+        user = fAuth.getCurrentUser();
+
+        DocumentReference documentReference = fStore.collection("users").document(userId);
+        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(documentSnapshot.exists()){
+                    viewnumber.setText(documentSnapshot.getString("number"));
+                    viewname.setText(documentSnapshot.getString("name"));
+                    viewemail.setText(documentSnapshot.getString("email"));
+                    viewpost.setText(documentSnapshot.getString("post"));
+                    viewabout.setText(documentSnapshot.getString("aboutme"));
+
+                }else {
+                    Log.d("tag", "onEvent: Document do not exists");
+                }
+            }
+        });
+
+        editProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // open gallery
+                Intent i = new Intent(v.getContext(),Profile.class);
+                i.putExtra("name",viewname.getText().toString());
+                i.putExtra("email",viewemail.getText().toString());
+                i.putExtra("number",viewnumber.getText().toString());
+                i.putExtra("post",viewpost.getText().toString());
+                i.putExtra("aboutme",viewabout.getText().toString());
+                startActivity(i);
+            }
+        });
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        documentReference.get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.getResult().exists()){
-                            String nameexist = task.getResult().getString("name");
-                            String emailexist = task.getResult().getString("email");
-                            String numberexist = task.getResult().getString("number");
-                            String postexist = task.getResult().getString("post");
-                            String aboutexist = task.getResult().getString("aboutme");
-                            String Url = task.getResult().getString("url");
-                            Picasso.get().load(Url).into(imageView);
-                            editname.setText(nameexist);
-                            editemail.setText(emailexist);
-                            editnumber.setText(numberexist);
-                            editpost.setText(postexist);
-                            editabout.setText(aboutexist);
-                        }else {
-                            Toast.makeText(ShowProfile.this, "No Profile exist", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                    }
-                });
-    }
-
 }
