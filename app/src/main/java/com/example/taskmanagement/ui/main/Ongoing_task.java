@@ -39,7 +39,7 @@ public class Ongoing_task extends Fragment {
             item.setImageResourceId(Images[i]);
             item.setTitle(title[i]);
             item.setAssigned_by(assigned[i]);
-            item.setDate(date[i]);
+            item.setDate(date[i] + " left ");
             listitems.add(item);
 
         }
