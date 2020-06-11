@@ -177,6 +177,7 @@
         android:layout_gravity="end"
         android:layout_marginTop="50dp"
         android:layout_marginRight="70dp"
+        android:background="@drawable/roundbutton"
         android:backgroundTint="@color/colorPrimary"
         android:text="Edit Profile" />
 

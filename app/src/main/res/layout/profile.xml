@@ -76,6 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_margin="15dp"
+            android:background="@drawable/roundbutton"
             android:text="Save Profile"
             android:textColor="@android:color/black" />
 

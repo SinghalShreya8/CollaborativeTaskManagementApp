@@ -50,7 +50,7 @@ public class Profile extends AppCompatActivity {
         String email = data.getStringExtra("email");
         String phone = data.getStringExtra("number");
         String postnow = data.getStringExtra("post");
-        String aboutme = data.getStringExtra("aboutme");
+        String aboutme = data.getStringExtra("about");
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();

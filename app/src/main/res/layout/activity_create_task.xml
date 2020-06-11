@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="20dip"
-    android:background="@drawable/back"
     tools:context=".CreateTask">
 
     <AutoCompleteTextView
@@ -59,11 +58,12 @@
     <Button
         android:id="@+id/b1"
         android:layout_width="91dp"
-        android:layout_height="35dp"
+        android:layout_height="40dp"
         android:layout_alignParentEnd="true"
         android:text="Browse"
+        android:background="@drawable/roundbutton"
         android:textColor="@android:color/white"
-        android:background="@color/design_default_color_primary"/>
+        />
     </RelativeLayout>
 
     <EditText
@@ -86,6 +86,8 @@
         android:layout_gravity="center_horizontal"
         android:text="Create"
         android:textColor="@android:color/white"
-        android:background="@color/design_default_color_primary"/>
+        android:layout_marginTop="20dp"
+        android:background="@drawable/roundbutton"
+       />
 
 </LinearLayout>
