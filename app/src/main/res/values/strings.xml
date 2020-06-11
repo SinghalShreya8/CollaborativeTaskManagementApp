@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Task Management</string>
+    <string name="app_name">Collab+</string>
     <string name="tab_text_1">Ongoing Task</string>
     <string name="tab_text_2">Accept/Reject Task</string>
     <string name="description">Create a collaborative task management app using android studio. Use Java as frontend language. Use DyanmoDB for storage at backend. </string>
