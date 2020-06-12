@@ -9,8 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.Toast;
-
-import com.example.taskmanagement.MainActivity;
+import com.example.taskmanagement.Popup;
 import com.example.taskmanagement.R;
 
 import java.util.ArrayList;
@@ -110,10 +109,8 @@ public class Accept_Reject extends Fragment {
 
             holder.rej.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-
-                    Intent i= new Intent(v.getContext(),Reason.class);
-                    i.putExtra("taskobject",arr);
-                    v.getContext().startActivity(i);
+                        Popup popUpClass = new Popup();
+                        popUpClass.showPopupWindow(v);
                 }
             });
 

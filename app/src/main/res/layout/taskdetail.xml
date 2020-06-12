@@ -7,14 +7,13 @@
     android:orientation="vertical"
     android:padding="4dp">
 
-        <TextView
+    <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:background="#D2EFE9"
+        android:background="#AFDCF4"
         android:ems="10"
-        android:textSize="34sp"
-        />
+        android:textSize="34sp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -26,6 +25,7 @@
             android:ems="10"
             android:text="Assigned By : "
             android:textStyle="bold"/>
+
         <TextView
             android:id="@+id/assign"
             android:layout_width="wrap_content"
@@ -90,6 +90,15 @@
         android:layout_toRightOf="@id/endheading"
         android:ems="10"/>
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="bottom"
+        android:background="@drawable/roundbutton"
+        android:text="Mark Complete" />
 
 
 </LinearLayout>
