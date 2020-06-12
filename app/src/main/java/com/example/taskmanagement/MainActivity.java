@@ -5,6 +5,7 @@ package com.example.taskmanagement;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.taskmanagement.ui.main.Completed_task;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -92,6 +93,8 @@ public class MainActivity extends AppCompatActivity {
 
                 return true;
             case R.id.action_completed_tasks:
+                Intent i = new Intent(MainActivity.this, Completed_task.class);
+                startActivity(i);
                 return true;
             case R.id.action_settings:
                 return true;

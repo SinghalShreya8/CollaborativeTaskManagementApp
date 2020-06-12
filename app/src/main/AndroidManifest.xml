@@ -34,8 +34,10 @@
             android:name=".ui.main.Taskdetail"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".ui.main.Reason"
+            android:name=".ui.main.Completed_task"
             android:parentActivityName=".MainActivity" />
+
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
