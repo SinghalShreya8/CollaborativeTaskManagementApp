@@ -46,11 +46,11 @@ public class Profile extends AppCompatActivity {
         setContentView(R.layout.profile);
 
         Intent data = getIntent();
-        final String fullName = data.getStringExtra("name");
+        String fullName = data.getStringExtra("name");
         String email = data.getStringExtra("email");
         String phone = data.getStringExtra("number");
         String postnow = data.getStringExtra("post");
-        String aboutme = data.getStringExtra("about");
+        String aboutme = data.getStringExtra("aboutme");
 
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
