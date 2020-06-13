@@ -25,7 +25,6 @@
         android:layout_height="wrap_content"
         android:fontFamily="casual"
        android:textSize="15sp">
-        <!--        android:layout_toRightOf="@id/assign"-->
 
     </TextView>
     <TextView
@@ -47,16 +46,6 @@
         android:layout_height="3dp"
         android:background="#4FC3F7"
         android:layout_below="@+id/titleTextView"/>
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:textSize="20sp"-->
-<!--        android:text="Deadline : "-->
-<!--        android:id="@+id/deadline"-->
-<!--        android:layout_below="@+id/titleTextView"-->
-<!--        >-->
-
-<!--    </TextView>-->
     <TextView
         android:id="@+id/dateTextView"
         android:layout_width="match_parent"
@@ -64,15 +53,8 @@
         android:layout_marginTop="5dp"
         android:textSize="15sp"
         android:layout_below="@+id/titleTextView"
-        android:fontFamily="sans-serif-thin">
+        android:fontFamily="sans-serif">
     </TextView>
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:textSize="20sp"-->
-<!--        android:text="Assigned By :"-->
-<!--        android:id="@+id/assign"-->
-<!--        android:layout_below="@+id/deadline"/>-->
 
 </RelativeLayout>
 </androidx.cardview.widget.CardView>

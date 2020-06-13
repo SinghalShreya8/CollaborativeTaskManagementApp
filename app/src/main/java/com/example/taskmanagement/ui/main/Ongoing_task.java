@@ -1,50 +1,66 @@
 package com.example.taskmanagement.ui.main;
+
 import com.example.taskmanagement.R;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Ongoing_task extends Fragment {
 
-    ArrayList<WonderModel> listitems = new ArrayList<>();
     RecyclerView MyRecyclerView;
-    int  Images[] = {R.drawable.ic_launcher_background,R.drawable.ic_launcher_background,R.drawable.ic_launcher_background,R.drawable.ic_launcher_background,R.drawable.ic_launcher_background,R.drawable.ic_launcher_background,R.drawable.ic_launcher_background};
-    String title[]={"title 1","title 2","title 3","title 4","title 5","title 6","title 7"};
-    String date[]={"01-01-2021","01-01-2021","01-01-2021","01-01-2021","01-01-2021","01-01-2021","01-01-2021"};
-    String assigned[]={"Mr. ABC","Mr. ABC","Mr. ABC","Mr. ABC","Mr. ABC","Mr. ABC","Mr. ABC"};
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    FirebaseFirestore db;
+    FirebaseAuth fAuth;
+    String emailId;
+    String d1, t1;;
+    FirestoreRecyclerAdapter adapter;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initializeList();
+
     }
 
+    private String getTimeDifference(Date deadlineDate, Date currentDate) {
+        long diff = deadlineDate.getTime() - currentDate.getTime();
+        long seconds = diff / 1000;
+        int days = (int) (seconds / (24 * 60 * 60));
+        seconds -= days * (24 * 60 * 60);
+        long hours = (int) (seconds / (60 * 60));
+        seconds -= hours * (60 * 60);
+        int minutes = (int) (seconds / (60));
+        seconds -= minutes * 60;
 
-    public void initializeList() {
-        listitems.clear();
-
-        for(int i =0;i<7;i++){
-
-
-            WonderModel item = new WonderModel();
-            item.setImageResourceId(Images[i]);
-            item.setTitle(title[i]);
-            item.setAssigned_by(assigned[i]);
-            item.setDate(date[i] + " left ");
-            listitems.add(item);
-
+        String timeDifference = "";
+        if (currentDate.before(deadlineDate)) {
+            timeDifference = days + " Days " + hours + " hours " + minutes + " minutes left";
         }
-
+        return timeDifference;
     }
+
 
     @Override
     public View onCreateView(
@@ -53,78 +69,90 @@ public class Ongoing_task extends Fragment {
     ) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_ongoing_task, container, false);
-        MyRecyclerView = (RecyclerView) view.findViewById(R.id.cardView);
+        fAuth = FirebaseAuth.getInstance();
+        emailId = fAuth.getCurrentUser().getEmail();
+        t1 = "";
+        db = FirebaseFirestore.getInstance();
+        Query query = db.collection("users").document(emailId).collection("ongoingtask");
+        FirestoreRecyclerOptions<WonderModel> item = new FirestoreRecyclerOptions.Builder<WonderModel>()
+                .setQuery(query, WonderModel.class)
+                .build();
+        adapter = new FirestoreRecyclerAdapter<WonderModel, OngoingTaskViewHolder>(item) {
+            @NonNull
+            @Override
+            public OngoingTaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.recycle_items, parent, false);
+                return new OngoingTaskViewHolder(view);
+            }
+
+            @Override
+            protected void onBindViewHolder(@NonNull OngoingTaskViewHolder holder, int position, @NonNull WonderModel model) {
+                final String arr[] = {model.getTitle(), model.getDeadline_Date(), model.getassignedBy(), model.getDeadline_Time(), model.getDescription()};
+                final WonderModel copy= model;
+                d1 = arr[1] + " " + arr[3];
+                try {
+
+                    Date deadlineDate = dateFormat.parse(d1);
+                    Date currentDate = (new Date());
+                    t1 = getTimeDifference(deadlineDate, currentDate);
+
+                } catch (ParseException e) {
+                    t1="0 days";
+                    e.printStackTrace();
+                }
+                holder.titleTextView.setText(arr[0]);
+                holder.dateTextView.setText(t1);
+                holder.assignedByTextView.setText(arr[2]);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(v.getContext(), Taskdetail.class);
+                        Bundle b = new Bundle();
+                        b.putSerializable("taskObject", copy);
+                        i.putExtras(b);
+                        i.putExtra("time",t1);
+                        v.getContext().startActivity(i);
+                    }
+                });
+            }
+        };
+        MyRecyclerView = view.findViewById(R.id.cardView);
         MyRecyclerView.setHasFixedSize(true);
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());
         MyLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        if (listitems.size() > 0 & MyRecyclerView != null) {
-            MyRecyclerView.setAdapter(new MyAdapter(listitems));
-        }
-        MyRecyclerView.setLayoutManager(MyLayoutManager);
 
+        MyRecyclerView.setLayoutManager(MyLayoutManager);
+        MyRecyclerView.setAdapter(adapter);
         return view;
     }
+
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
+    public void onStart() {
+        super.onStart();
+        adapter.startListening();
     }
 
-    public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
-        private ArrayList<WonderModel> list;
-
-        public MyAdapter(ArrayList<WonderModel> Data) {
-            list = Data;
-        }
-
-        @Override
-        public MyViewHolder onCreateViewHolder(ViewGroup parent,int viewType) {
-            // create a new view
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.recycle_items, parent, false);
-            MyViewHolder holder = new MyViewHolder(view);
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(final MyViewHolder holder, final int position) {
-            final String arr[]={list.get(position).getTitle(),list.get(position).getDate(),list.get(position).getAssigned_by()};
-
-            holder.titleTextView.setText(arr[0]);
-            holder.dateTextView.setText(arr[1]);
-            holder.assignedByTextView.setText(arr[2]);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent i = new Intent(v.getContext(),Taskdetail.class);
-                    i.putExtra("taskobject",arr);
-                    v.getContext().startActivity(i);
-                }
-            });
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return list.size();
-        }
+    @Override
+    public void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 
-    public class MyViewHolder extends com.example.taskmanagement.ui.main.MyViewHolder {
 
+    private class OngoingTaskViewHolder extends RecyclerView.ViewHolder {
         public TextView titleTextView;
         public TextView assignedByTextView;
-        public  TextView dateTextView;
+        public TextView dateTextView;
 
-        public MyViewHolder(View v) {
+        public OngoingTaskViewHolder(View v) {
             super(v);
-            titleTextView = (TextView) v.findViewById(R.id.titleTextView);
+            titleTextView = v.findViewById(R.id.titleTextView);
             assignedByTextView = v.findViewById(R.id.assignedByTextView);
-            dateTextView = (TextView) v.findViewById(R.id.dateTextView);
-
-
+            dateTextView = v.findViewById(R.id.dateTextView);
 
         }
     }
+
 
 }

@@ -1,65 +1,30 @@
 package com.example.taskmanagement.ui.main;
 
-public class WonderModel {
+import java.io.Serializable;
 
-//    String cardName;
-    int imageResourceId;
-//    int isfav;
-//    int isturned;
-    String title, date, assigned_by;
+public class WonderModel implements Serializable {
 
-    public void setTitle(String title){
-        this.title=title;
-    }
-    public  void setDate(String date){
-        this.date=date;
-    }
-    public void setAssigned_by(String assigned_by){
-        this.assigned_by=assigned_by;
+    String title, Deadline_Date, assignedBy, Deadline_Time, description;
+
+    public String getTitle() {
+        return title;
     }
 
-    public String getTitle(){
-        return  title;
+    public String getassignedBy() {
+        return assignedBy;
     }
 
-    public String getAssigned_by() {
-        return assigned_by;
+    public String getDeadline_Date() {
+        return Deadline_Date;
     }
 
-    public String getDate() {
-        return date;
+    public String getDeadline_Time() {
+        return Deadline_Time;
     }
 
-//    public int getIsturned() {
-//        return isturned;
-//    }
-//
-//    public void setIsturned(int isturned) {
-//        this.isturned = isturned;
-//    }
-//
-//    public int getIsfav() {
-//        return isfav;
-//    }
-//
-//    public void setIsfav(int isfav) {
-//        this.isfav = isfav;
-//    }
-//
-//    public String getCardName() {
-//        return cardName;
-//    }
-//
-//    public void setCardName(String cardName) {
-//        this.cardName = cardName;
-//    }
-//
-    public int getImageResourceId() {
-        return imageResourceId;
+    public String getDescription() {
+        return description;
     }
 
-    public void setImageResourceId(int imageResourceId) {
-        this.imageResourceId = imageResourceId;
-    }
 }
 
