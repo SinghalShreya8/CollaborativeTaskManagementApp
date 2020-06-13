@@ -3,9 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="20dip"
+    android:background="@drawable/gradient2"
     tools:context=".CreateTask">
 
     <AutoCompleteTextView
@@ -39,31 +40,33 @@
         android:text="" />
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/attachheading"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:text="Attach Document"/>
+        android:layout_height="99dp">
+
+        <Button
+            android:id="@+id/b1"
+            android:layout_width="91dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/roundbutton"
+            android:text="Browse"
+            android:textColor="#3B5998" />
+
+        <TextView
+            android:id="@+id/attachheading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Attach Document"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/fileattached"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:layout_below="@+id/attachheading"/>
+            android:layout_below="@+id/attachheading"
+            android:textSize="20dp" />
 
-    <Button
-        android:id="@+id/b1"
-        android:layout_width="91dp"
-        android:layout_height="40dp"
-        android:layout_alignParentEnd="true"
-        android:text="Browse"
-        android:background="@drawable/roundbutton"
-        android:textColor="@android:color/white"
-        />
     </RelativeLayout>
 
     <EditText
@@ -84,10 +87,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Create"
-        android:textColor="@android:color/white"
         android:layout_marginTop="20dp"
         android:background="@drawable/roundbutton"
-       />
+        android:text="Create"
+        android:textColor="#3B5998" />
 
 </LinearLayout>

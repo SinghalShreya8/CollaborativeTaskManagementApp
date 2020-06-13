@@ -8,7 +8,8 @@
         android:orientation="vertical"
         android:gravity="center"
         android:padding="20dip"
-        android:background="@drawable/back"
+        android:background="@drawable/gradient2"
+
         tools:context=".Profile">
 
         <ImageView

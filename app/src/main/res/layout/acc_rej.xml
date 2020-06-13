@@ -33,25 +33,28 @@
                 <Button
                     android:id="@+id/accept"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="50dp"
 
                     android:layout_marginRight="30dp"
+                    android:background="@drawable/bluebutton"
 
-                    android:backgroundTint="@android:color/darker_gray"
+
                     android:text="Accept"
+                    android:textColor="@android:color/white"
                     android:textSize="18sp" />
 
                 <Button
                     android:id="@+id/reject"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_marginLeft="30dp"
 
                     android:layout_marginRight="30dp"
 
-                    android:backgroundTint="@android:color/darker_gray"
+                    android:background="@drawable/bluebutton"
                     android:text="Reject"
+                    android:textColor="@android:color/white"
                     android:textSize="18sp" />
 
             </LinearLayout>

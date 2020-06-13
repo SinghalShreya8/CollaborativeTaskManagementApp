@@ -9,7 +9,7 @@
         android:right="10dp"
         android:top="10dp" />
 
-    <solid android:color="@android:color/white"/>
+    <solid android:color="@color/colorPrimary"/>
 
 </shape>
 

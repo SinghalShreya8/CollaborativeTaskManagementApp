@@ -64,7 +64,7 @@ public class Accept_Reject extends Fragment {
 
         String timeDifference = "";
         if (currentDate.before(deadlineDate)) {
-            timeDifference = days + " Days " + hours + " hours " + minutes + " minutes";
+            timeDifference = days + " Days " + hours + " hrs " + minutes + " mins";
         }
         return timeDifference;
     }

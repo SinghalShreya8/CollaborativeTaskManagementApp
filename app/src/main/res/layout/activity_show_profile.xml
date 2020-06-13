@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/gradient2"
     tools:context=".ShowProfile">
 
     <ImageView
@@ -178,7 +179,7 @@
         android:layout_marginTop="50dp"
         android:layout_marginRight="70dp"
         android:background="@drawable/roundbutton"
-        android:backgroundTint="@color/colorPrimary"
+
         android:text="Edit Profile" />
 
 </LinearLayout>
