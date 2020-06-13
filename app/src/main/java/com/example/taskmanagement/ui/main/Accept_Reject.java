@@ -13,9 +13,16 @@ import com.example.taskmanagement.Popup;
 import com.example.taskmanagement.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.gson.internal.$Gson$Preconditions;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,12 +34,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static android.content.ContentValues.TAG;
+
 public class Accept_Reject extends Fragment {
 
     RecyclerView MyRecyclerView;
     FirestoreRecyclerAdapter adapter;
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-    FirebaseFirestore db;
+    FirebaseFirestore db_taskrequests ,db_ongoingTasks,db_rejectedTasks ;
     FirebaseAuth fAuth;
     String emailId;
     String d1, t1;
@@ -70,8 +79,12 @@ public class Accept_Reject extends Fragment {
         fAuth = FirebaseAuth.getInstance();
         emailId = fAuth.getCurrentUser().getEmail();
         t1 = "";
-        db = FirebaseFirestore.getInstance();
-        Query query = db.collection("users").document(emailId).collection("ongoingtask");
+        db_taskrequests = FirebaseFirestore.getInstance();
+        db_ongoingTasks = FirebaseFirestore.getInstance();
+        db_rejectedTasks = FirebaseFirestore.getInstance();
+        Query query = db_taskrequests.collection("users").document(emailId).collection("taskrequests");
+        Query queryOngoing = db_ongoingTasks.collection("users").document(emailId).collection("ongoingtask");
+        Query queryRejected = db_taskrequests.collection("users").document(emailId).collection("rejectedtasks");
         FirestoreRecyclerOptions<WonderModel> item = new FirestoreRecyclerOptions.Builder<WonderModel>()
                 .setQuery(query, WonderModel.class)
                 .build();
@@ -86,7 +99,7 @@ public class Accept_Reject extends Fragment {
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull AcceptTaskViewHolder holder, int position, @NonNull WonderModel model) {
+            protected void onBindViewHolder(@NonNull AcceptTaskViewHolder holder, final int position, @NonNull WonderModel model) {
                 final String arr[] = {model.getTitle(), model.getDeadline_Date(), model.getassignedBy(), model.getDeadline_Time(), model.getDescription()};
                 final WonderModel copy = model;
                 d1 = arr[1] + " " + arr[3];
@@ -116,6 +129,10 @@ public class Accept_Reject extends Fragment {
                 });
                 holder.accept.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
+                        String requestId=  getSnapshots().getSnapshot(position).getId();
+                        DocumentReference db_request =db_rejectedTasks.collection("users").document(emailId).collection("taskrequests").document(requestId);
+                        DocumentReference db_Ongoing = db_ongoingTasks.collection("users").document(emailId).collection("ongoingtask").document();
+                        moveFirestoreDocument(db_request,db_Ongoing);
                         Log.i("message", "Accept");
                     }
                 });
@@ -124,6 +141,11 @@ public class Accept_Reject extends Fragment {
                     public void onClick(View v) {
                         Popup popUpClass = new Popup();
                         popUpClass.showPopupWindow(v);
+                        String requestId=  getSnapshots().getSnapshot(position).getId();
+                        DocumentReference db_request =db_rejectedTasks.collection("users").document(emailId).collection("taskrequests").document(requestId);
+                        DocumentReference db_rejected = db_rejectedTasks.collection("users").document(emailId).collection("rejectedtask").document();
+                        moveFirestoreDocument(db_request,db_rejected);
+
                     }
                 });
             }
@@ -136,6 +158,48 @@ public class Accept_Reject extends Fragment {
         MyRecyclerView.setLayoutManager(MyLayoutManager);
         MyRecyclerView.setAdapter(adapter);
         return view;
+    }
+    public void moveFirestoreDocument(final DocumentReference fromPath, final DocumentReference toPath) {
+        fromPath.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document != null) {
+                        toPath.set(document.getData())
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "DocumentSnapshot successfully written!");
+                                        fromPath.delete()
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w(TAG, "Error deleting document", e);
+                                                    }
+                                                });
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Error writing document", e);
+                                    }
+                                });
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
     @Override
