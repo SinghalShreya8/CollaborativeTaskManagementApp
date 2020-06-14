@@ -26,6 +26,7 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.taskmanagement.ui.main.SectionsPagerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class MainActivity extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
     DocumentReference documentReference;
 
     @Override
@@ -85,11 +87,17 @@ public class MainActivity extends AppCompatActivity {
                         build();
 
                 GoogleSignInClient googleSignInClient= GoogleSignIn.getClient(this,gso);
-                googleSignInClient.signOut();
-                Intent i2 = new Intent(MainActivity.this,signIn.class);
-                i2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                Toast.makeText(MainActivity.this,"Logged out successfully", Toast.LENGTH_SHORT).show();
-                startActivity(i2);
+                googleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        mAuth.signOut();
+                        Intent i2 = new Intent(MainActivity.this,signIn.class);
+                        i2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        Toast.makeText(MainActivity.this,"Logged out successfully", Toast.LENGTH_SHORT).show();
+                        startActivity(i2);
+                    }
+                });
+
 
                 return true;
             case R.id.action_completed_tasks:
