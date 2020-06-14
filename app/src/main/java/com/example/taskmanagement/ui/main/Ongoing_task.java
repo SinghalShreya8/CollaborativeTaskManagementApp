@@ -77,17 +77,17 @@ public class Ongoing_task extends Fragment {
         FirestoreRecyclerOptions<WonderModel> item = new FirestoreRecyclerOptions.Builder<WonderModel>()
                 .setQuery(query, WonderModel.class)
                 .build();
-        adapter = new FirestoreRecyclerAdapter<WonderModel, OngoingTaskViewHolder>(item) {
+        adapter = new FirestoreRecyclerAdapter<WonderModel, CompletedTaskViewHolder>(item) {
             @NonNull
             @Override
-            public OngoingTaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            public CompletedTaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.recycle_items, parent, false);
-                return new OngoingTaskViewHolder(view);
+                return new CompletedTaskViewHolder(view);
             }
 
             @Override
-            protected void onBindViewHolder(@NonNull OngoingTaskViewHolder holder, int position, @NonNull WonderModel model) {
+            protected void onBindViewHolder(@NonNull CompletedTaskViewHolder holder, int position, @NonNull WonderModel model) {
                 final String arr[] = {model.getTitle(), model.getDeadline_Date(), model.getassignedBy(), model.getDeadline_Time(), model.getDescription()};
                 final WonderModel copy= model;
                 d1 = arr[1] + " " + arr[3];
@@ -112,7 +112,7 @@ public class Ongoing_task extends Fragment {
                         Bundle b = new Bundle();
                         b.putSerializable("taskObject", copy);
                         i.putExtras(b);
-                        i.putExtra("time",t1);
+                 //       i.putExtra("AcceptReject","ongoing");
                         i.putExtra("requestId",requestId);
                         v.getContext().startActivity(i);
                     }
@@ -142,12 +142,12 @@ public class Ongoing_task extends Fragment {
     }
 
 
-    private class OngoingTaskViewHolder extends RecyclerView.ViewHolder {
+    private class CompletedTaskViewHolder extends RecyclerView.ViewHolder {
         public TextView titleTextView;
         public TextView assignedByTextView;
         public TextView dateTextView;
 
-        public OngoingTaskViewHolder(View v) {
+        public CompletedTaskViewHolder(View v) {
             super(v);
             titleTextView = v.findViewById(R.id.titleTextView);
             assignedByTextView = v.findViewById(R.id.assignedByTextView);

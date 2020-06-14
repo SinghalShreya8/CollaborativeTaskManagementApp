@@ -29,6 +29,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -37,10 +39,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -55,6 +61,7 @@ public class CreateTask extends AppCompatActivity {
     DatePickerDialog picker;
     TimePickerDialog timer;
     AutoCompleteTextView auto_mail;
+    String receipent_mails;
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$", Pattern.CASE_INSENSITIVE);
     private int  mHour, mMinute;
     TextView textFile;
@@ -64,6 +71,8 @@ public class CreateTask extends AppCompatActivity {
     FirebaseUser Cuser;
     StorageReference storageReference;
     public static final String TAG = "TAG";
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    List<String>mail_items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +85,10 @@ public class CreateTask extends AppCompatActivity {
         b1= findViewById(R.id.b1);
         b2= findViewById(R.id.b2);
         textFile=findViewById(R.id.fileattached);
+        //Code to get receipent mails and store them in array list after splitting at commas;
         auto_mail=(AutoCompleteTextView)findViewById(R.id.autoemail);
+
+
         addAdapterToViews();
         time.setInputType(InputType.TYPE_NULL);
         end.setInputType(InputType.TYPE_NULL);
@@ -116,6 +128,7 @@ public class CreateTask extends AppCompatActivity {
                                 end.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
                             }
                         }, year, month, day);
+                picker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000); //disable previous dates
                 picker.show();
             }
         });
@@ -153,10 +166,19 @@ public class CreateTask extends AppCompatActivity {
     }
 
     public void create_task(){
-            tit = title.getText().toString();
-            desc = description.getText().toString();
-            ed =end.getText().toString();
-            et =time.getText().toString();
+        tit = title.getText().toString();
+        desc = description.getText().toString();
+        ed =end.getText().toString();
+        et =time.getText().toString();
+        Date c = Calendar.getInstance().getTime();
+        System.out.println("Current time => " + c);
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+        String formattedDate = df.format(c);
+
+        receipent_mails = auto_mail.getText().toString();
+        // Log.e("mails", receipent_mails);
+        mail_items =  Arrays.asList(receipent_mails.split("\\s*,\\s*"));
 
 
         fAuth = FirebaseAuth.getInstance();
@@ -172,7 +194,9 @@ public class CreateTask extends AppCompatActivity {
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
 
         CollectionReference curUserRef = fStore.collection("users").document(Cuser.getEmail()).collection("createdTask");
-        final CollectionReference tagUserRef = fStore.collection("users").document(auto_mail.getText().toString()).collection("taskrequests");
+        final CollectionReference[] tagUserRef = new CollectionReference[mail_items.size()];
+
+        //Log.e("title", String.valueOf(mail_items));
         final Map<String,Object> data = new HashMap<>();
         data.put("status","active");
         assert acct != null;
@@ -182,10 +206,17 @@ public class CreateTask extends AppCompatActivity {
         data.put("description",desc);
         data.put("Deadline_Date",ed);
         data.put("Deadline_Time",et);
+        data.put("Created_Date",formattedDate);
         curUserRef.add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
-                tagUserRef.add(data);
+                Log.e("Email", String.valueOf(mail_items));
+                for (int i = 0; i < mail_items.size(); i++) {
+                    String element = mail_items.get(i);
+                    // Log.e("title",element);
+                    tagUserRef[i] = fStore.collection("users").document(element).collection("taskrequests");
+                    tagUserRef[i].add(data);
+                }
                 Toast.makeText(CreateTask.this, "Task Created", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
                 Intent intent = new Intent(CreateTask.this,MainActivity.class);
@@ -240,9 +271,3 @@ public class CreateTask extends AppCompatActivity {
     }
 
 }
-
-
-
-
-
-

@@ -36,6 +36,9 @@
         <activity
             android:name=".ui.main.Completed_task"
             android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".ui.main.CreatedTask"
+            android:parentActivityName=".MainActivity" />
 
 
         <activity

@@ -27,10 +27,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static android.content.ContentValues.TAG;
 
 public class Taskdetail extends AppCompatActivity {
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.taskdetail);
@@ -39,29 +44,44 @@ public class Taskdetail extends AppCompatActivity {
         final FirebaseFirestore fStore;
         final FirebaseUser Cuser;
         fAuth = FirebaseAuth.getInstance();
-     //   Query queryOngoing = db_ongoingTasks.collection("users").document(emailId).collection("ongoingtask");
-     //    FirestoreRecyclerOptions<WonderModel> item = new FirestoreRecyclerOptions.Builder<WonderModel>()
-     //            .setQuery(queryOngoing, WonderModel.class)
-     //           .build();
         Bundle b = this.getIntent().getExtras();
         WonderModel model = (WonderModel) b.getSerializable("taskObject");
-        String timeleft = getIntent().getStringExtra("time");
         final String requestId = getIntent().getStringExtra("requestId");
+        String  completedtime=getIntent().getStringExtra("time");
+
+        String ar=getIntent().getStringExtra("AcceptReject");
+    if(ar!=null && (ar.equalsIgnoreCase("ar") || ar.equalsIgnoreCase("completed")))
+        completeButton.setVisibility(View.GONE);
+    else
+        completeButton.setVisibility(View.VISIBLE);
         TextView t1 = findViewById(R.id.title);
         TextView t2 = findViewById(R.id.time);
+
         TextView t3 = findViewById(R.id.assign);
         TextView t4 =findViewById(R.id.description);
         TextView t5 = findViewById(R.id.num_assigned_txt);
         TextView t6 = findViewById(R.id.num_txt);
+        String timeleft=model.getDeadline_Date()+" "+model.getDeadline_Time();
+        try {
+
+            Date deadlineDate = dateFormat.parse(timeleft);
+            Date currentDate = (new Date());
+            timeleft = getTimeDifference(deadlineDate, currentDate);
+
+        } catch (ParseException e) {
+            timeleft="0 days";
+            e.printStackTrace();
+        }
         t1.setText(model.getTitle());
         t2.setText(timeleft);
+        if(completedtime!=null && completedtime.equals("Completed the task")){
+            t2.setText("Completed the task");
+        }
         t3.setText(model.getassignedBy());
         t4.setText(model.getDescription());
         t5.setText(model.getassignedBy().substring(0,1).toUpperCase());
         String userName = fAuth.getCurrentUser().getDisplayName();
         t6.setText(userName.substring(0,1).toUpperCase());
-//        t5.setText(Character.toUpperCase(model.getassignedBy().charAt(0)));
-
         fStore = FirebaseFirestore.getInstance();
         Cuser = fAuth.getCurrentUser();
         completeButton.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +96,23 @@ public class Taskdetail extends AppCompatActivity {
             }
         });
     }
+    private String getTimeDifference(Date deadlineDate, Date currentDate) {
+        long diff = deadlineDate.getTime() - currentDate.getTime();
+        long seconds = diff / 1000;
+        int days = (int) (seconds / (24 * 60 * 60));
+        seconds -= days * (24 * 60 * 60);
+        long hours = (int) (seconds / (60 * 60));
+        seconds -= hours * (60 * 60);
+        int minutes = (int) (seconds / (60));
+        seconds -= minutes * 60;
+
+        String timeDifference = "";
+        if (currentDate.before(deadlineDate)) {
+            timeDifference = days + " Days " + hours + " hours " + minutes + " minutes left";
+        }
+        return timeDifference;
+    }
+
     public void moveFirestoreDocument(final DocumentReference fromPath, final DocumentReference toPath) {
         fromPath.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
