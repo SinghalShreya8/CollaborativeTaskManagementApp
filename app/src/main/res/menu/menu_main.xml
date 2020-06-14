@@ -8,6 +8,11 @@
         android:title="Profile"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_created_tasks"
+        android:orderInCategory="100"
+        android:title="Created Tasks"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_completed_tasks"
         android:orderInCategory="100"
         android:title="Completed Tasks"
@@ -17,9 +22,5 @@
         android:orderInCategory="100"
         android:title="Logout"
         app:showAsAction="never" />
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="Settings"
-        app:showAsAction="never" />
+
 </menu>

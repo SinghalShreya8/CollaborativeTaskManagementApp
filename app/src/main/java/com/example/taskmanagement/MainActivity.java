@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.taskmanagement.ui.main.Completed_task;
+import com.example.taskmanagement.ui.main.CreatedTask;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -104,7 +106,9 @@ public class MainActivity extends AppCompatActivity {
                 Intent i = new Intent(MainActivity.this, Completed_task.class);
                 startActivity(i);
                 return true;
-            case R.id.action_settings:
+            case R.id.action_created_tasks:
+                Intent i1 = new Intent(MainActivity.this, CreatedTask.class);
+                startActivity(i1);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
