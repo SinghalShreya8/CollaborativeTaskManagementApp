@@ -128,7 +128,6 @@ public class CreateTask extends AppCompatActivity {
                                 end.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
                             }
                         }, year, month, day);
-                picker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000); //disable previous dates
                 picker.show();
             }
         });
@@ -166,19 +165,19 @@ public class CreateTask extends AppCompatActivity {
     }
 
     public void create_task(){
-        tit = title.getText().toString();
-        desc = description.getText().toString();
-        ed =end.getText().toString();
-        et =time.getText().toString();
-        Date c = Calendar.getInstance().getTime();
-        System.out.println("Current time => " + c);
+            tit = title.getText().toString();
+            desc = description.getText().toString();
+            ed =end.getText().toString();
+            et =time.getText().toString();
+            Date c = Calendar.getInstance().getTime();
+            System.out.println("Current time => " + c);
 
-        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-        String formattedDate = df.format(c);
+            SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+            String formattedDate = df.format(c);
 
-        receipent_mails = auto_mail.getText().toString();
-        // Log.e("mails", receipent_mails);
-        mail_items =  Arrays.asList(receipent_mails.split("\\s*,\\s*"));
+            receipent_mails = auto_mail.getText().toString();
+           // Log.e("mails", receipent_mails);
+            mail_items =  Arrays.asList(receipent_mails.split("\\s*,\\s*"));
 
 
         fAuth = FirebaseAuth.getInstance();
@@ -213,7 +212,7 @@ public class CreateTask extends AppCompatActivity {
                 Log.e("Email", String.valueOf(mail_items));
                 for (int i = 0; i < mail_items.size(); i++) {
                     String element = mail_items.get(i);
-                    // Log.e("title",element);
+                   // Log.e("title",element);
                     tagUserRef[i] = fStore.collection("users").document(element).collection("taskrequests");
                     tagUserRef[i].add(data);
                 }
@@ -271,3 +270,9 @@ public class CreateTask extends AppCompatActivity {
     }
 
 }
+
+
+
+
+
+
