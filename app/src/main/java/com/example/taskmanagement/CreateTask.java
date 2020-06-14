@@ -171,7 +171,7 @@ public class CreateTask extends AppCompatActivity {
 
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
 
-        CollectionReference curUserRef = fStore.collection("users").document(Cuser.getEmail()).collection("ongoingtask");
+        CollectionReference curUserRef = fStore.collection("users").document(Cuser.getEmail()).collection("createdTask");
         final CollectionReference tagUserRef = fStore.collection("users").document(auto_mail.getText().toString()).collection("taskrequests");
         final Map<String,Object> data = new HashMap<>();
         data.put("status","active");

@@ -104,6 +104,7 @@ public class Ongoing_task extends Fragment {
                 holder.titleTextView.setText(arr[0]);
                 holder.dateTextView.setText(t1);
                 holder.assignedByTextView.setText(arr[2]);
+                final String requestId=  getSnapshots().getSnapshot(position).getId();
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -112,6 +113,7 @@ public class Ongoing_task extends Fragment {
                         b.putSerializable("taskObject", copy);
                         i.putExtras(b);
                         i.putExtra("time",t1);
+                        i.putExtra("requestId",requestId);
                         v.getContext().startActivity(i);
                     }
                 });

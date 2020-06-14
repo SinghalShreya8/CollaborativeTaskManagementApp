@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.taskmanagement.Popup;
+import com.example.taskmanagement.Profile;
 import com.example.taskmanagement.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -137,19 +139,20 @@ public class Accept_Reject extends Fragment {
                     }
                 });
 
+                final String requestId=  getSnapshots().getSnapshot(position).getId();
                 holder.reject.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         Popup popUpClass = new Popup();
-                        popUpClass.showPopupWindow(v);
-                        String requestId=  getSnapshots().getSnapshot(position).getId();
-                        DocumentReference db_request =db_rejectedTasks.collection("users").document(emailId).collection("taskrequests").document(requestId);
-                        DocumentReference db_rejected = db_rejectedTasks.collection("users").document(emailId).collection("rejectedtask").document();
-                        moveFirestoreDocument(db_request,db_rejected);
-
+                        popUpClass.showPopupWindow(v,requestId);
+                       // String requestId=  getSnapshots().getSnapshot(position).getId();
+                        //DocumentReference db_request =db_rejectedTasks.collection("users").document(emailId).collection("taskrequests").document(requestId);
+                        //DocumentReference db_rejected = db_rejectedTasks.collection("users").document(emailId).collection("rejectedtask").document();
+                        //moveFirestoreDocument(db_request,db_rejected);
                     }
                 });
             }
         };
+
         MyRecyclerView = view.findViewById(R.id.CardView2);
         MyRecyclerView.setHasFixedSize(true);
         LinearLayoutManager MyLayoutManager = new LinearLayoutManager(getActivity());

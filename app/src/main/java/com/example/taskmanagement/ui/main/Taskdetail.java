@@ -1,20 +1,26 @@
 package com.example.taskmanagement.ui.main;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.taskmanagement.MainActivity;
 import com.example.taskmanagement.Popup;
 import com.example.taskmanagement.R;
+import com.example.taskmanagement.ShowProfile;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,13 +35,10 @@ public class Taskdetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.taskdetail);
         Button completeButton = findViewById(R.id.complete);
-        final FirebaseFirestore db_completeTasks ,db_ongoingTasks ;
         FirebaseAuth fAuth;
-        final String emailId;
+        final FirebaseFirestore fStore;
+        final FirebaseUser Cuser;
         fAuth = FirebaseAuth.getInstance();
-        emailId = fAuth.getCurrentUser().getEmail();
-        db_completeTasks = FirebaseFirestore.getInstance();
-        db_ongoingTasks = FirebaseFirestore.getInstance();
      //   Query queryOngoing = db_ongoingTasks.collection("users").document(emailId).collection("ongoingtask");
      //    FirestoreRecyclerOptions<WonderModel> item = new FirestoreRecyclerOptions.Builder<WonderModel>()
      //            .setQuery(queryOngoing, WonderModel.class)
@@ -43,6 +46,7 @@ public class Taskdetail extends AppCompatActivity {
         Bundle b = this.getIntent().getExtras();
         WonderModel model = (WonderModel) b.getSerializable("taskObject");
         String timeleft = getIntent().getStringExtra("time");
+        final String requestId = getIntent().getStringExtra("requestId");
         TextView t1 = findViewById(R.id.title);
         TextView t2 = findViewById(R.id.time);
         TextView t3 = findViewById(R.id.assign);
@@ -58,13 +62,17 @@ public class Taskdetail extends AppCompatActivity {
         t6.setText(userName.substring(0,1).toUpperCase());
 //        t5.setText(Character.toUpperCase(model.getassignedBy().charAt(0)));
 
+        fStore = FirebaseFirestore.getInstance();
+        Cuser = fAuth.getCurrentUser();
         completeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-  //              String id = getSnapshots().getSnapshot(position).getId();
-  //              DocumentReference db_ongoing =db_ongoingTasks.collection("users").document(emailId).collection("ongoingtask").document("taskObject");
-   //             DocumentReference db_completed = db_completeTasks.collection("users").document(emailId).collection("completedtask").document();
-   //             moveFirestoreDocument(db_ongoing,db_completed);
-
+             //String id = getSnapshots().getSnapshot(position).getId();
+                DocumentReference db_ongoing =fStore.collection("users").document(Cuser.getEmail()).collection("ongoingtask").document(requestId);
+                DocumentReference db_completed = fStore.collection("users").document(Cuser.getEmail()).collection("completedtask").document();
+                moveFirestoreDocument(db_ongoing,db_completed);
+                Toast.makeText(v.getContext(), "Task Completed", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Taskdetail.this, MainActivity.class);
+                startActivity(intent);
             }
         });
     }
