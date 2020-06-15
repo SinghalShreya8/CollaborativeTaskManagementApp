@@ -32,17 +32,17 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/titleTextView"
                     android:text="Deadline : "
-                    android:textSize="20sp">
+                    android:textSize="18sp">
 
                 </TextView>
 
                 <TextView
                     android:id="@+id/dateTextView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/titleTextView"
                     android:layout_toRightOf="@id/deadline"
-                    android:textSize="20sp">
+                    android:textSize="18sp">
 
                 </TextView>
 
@@ -52,15 +52,19 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/deadline"
                     android:text="Assigned By :"
-                    android:textSize="20sp"></TextView>
+                    android:textSize="18sp">
+
+                </TextView>
 
                 <TextView
                     android:id="@+id/assignedByTextView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/dateTextView"
                     android:layout_toRightOf="@id/assign"
-                    android:textSize="20sp"></TextView>
+                    android:textSize="18sp">
+
+                </TextView>
 
                 <TextView
                     android:id="@+id/titleTextView"
