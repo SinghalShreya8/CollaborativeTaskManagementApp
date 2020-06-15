@@ -10,7 +10,6 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
     android:layout_gravity="center_horizontal"
-
     card_view:cardCornerRadius="10dp"
     card_view:cardBackgroundColor="@color/cardview_light_background"
     card_view:contentPadding="10dp"
