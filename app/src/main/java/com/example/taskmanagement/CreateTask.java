@@ -6,8 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -16,6 +17,7 @@ import android.provider.OpenableColumns;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -27,18 +29,21 @@ import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,9 +60,7 @@ public class CreateTask extends AppCompatActivity {
 
     EditText title,description,time,end;
     Button b1,b2;
-    String tit;
-    String desc;
-    String et,ed;
+    String tit,desc,et,ed;
     DatePickerDialog picker;
     TimePickerDialog timer;
     AutoCompleteTextView auto_mail;
@@ -73,6 +76,9 @@ public class CreateTask extends AppCompatActivity {
     public static final String TAG = "TAG";
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     List<String>mail_items;
+    Uri uri;        //Uri are actually URLs that are meant as a path to local storage
+    UploadTask uploadTask;
+    String fileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +145,10 @@ public class CreateTask extends AppCompatActivity {
                 chooseFile.setType("*/*");
                 chooseFile = Intent.createChooser(chooseFile, "Choose a file");
                 startActivityForResult(chooseFile, PICKFILE_RESULT_CODE);
+               // storageReference = FirebaseStorage.getInstance().getReference();
+               // StorageReference profileRef = storageReference.child("task_document").child(fileName);
+               // uploadTask = profileRef.putFile(uri);
+
             }
         });
         b2.setOnClickListener(new View.OnClickListener() {
@@ -183,7 +193,7 @@ public class CreateTask extends AppCompatActivity {
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         Cuser = fAuth.getCurrentUser();
-        storageReference = FirebaseStorage.getInstance().getReference();
+       storageReference = FirebaseStorage.getInstance().getReference();
 
         if(tit.isEmpty() || desc.isEmpty() || ed.isEmpty()|| auto_mail.getText().toString().isEmpty()|| et.isEmpty()){
             Toast.makeText(CreateTask.this, "One or Many fields are empty.", Toast.LENGTH_SHORT).show();
@@ -191,6 +201,11 @@ public class CreateTask extends AppCompatActivity {
         }
 
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+        //String name = System.currentTimeMillis() + "." + getFileExt(uri);
+        if(fileName!= null){
+            StorageReference profileRef = storageReference.child("task_document").child(fileName);
+            uploadTask = profileRef.putFile(uri);
+        }
 
         CollectionReference curUserRef = fStore.collection("users").document(Cuser.getEmail()).collection("createdTask");
         final CollectionReference[] tagUserRef = new CollectionReference[mail_items.size()];
@@ -206,6 +221,7 @@ public class CreateTask extends AppCompatActivity {
         data.put("Deadline_Date",ed);
         data.put("Deadline_Time",et);
         data.put("Created_Date",formattedDate);
+        data.put("document_path" , fileName);
         curUserRef.add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
@@ -232,6 +248,12 @@ public class CreateTask extends AppCompatActivity {
         });
     }
 
+    private String getFileExt(Uri uri) {
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return  mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -239,10 +261,10 @@ public class CreateTask extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case PICKFILE_RESULT_CODE:
-                if (resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK || data!=null || data.getData()!=null) {
                     //String FilePath = data.getData().getPath();
-                    Uri uri= data.getData();
-                    String fileName =  getFileName(uri);
+                    uri= data.getData();
+                    fileName =  getFileName(uri);
 
 
                     textFile.setText(fileName);

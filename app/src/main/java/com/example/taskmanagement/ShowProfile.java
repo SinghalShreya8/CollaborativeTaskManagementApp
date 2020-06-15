@@ -20,6 +20,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,6 +48,7 @@ public class ShowProfile extends AppCompatActivity {
     FirebaseUser user;
     ImageView profileImage;
     StorageReference storageReference;
+    GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
 
 
     @Override
@@ -63,10 +66,13 @@ public class ShowProfile extends AppCompatActivity {
 
 
         fAuth = FirebaseAuth.getInstance();
+        user = fAuth.getCurrentUser();
+        userId = fAuth.getCurrentUser().getEmail();
         fStore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
 
-        StorageReference profileRef = storageReference.child("users/"+fAuth.getCurrentUser().getUid()+"/profile images.jpg");
+
+        StorageReference profileRef = storageReference.child("users/"+ userId +"/profile image.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -74,19 +80,19 @@ public class ShowProfile extends AppCompatActivity {
             }
         });
 
-        userId = fAuth.getCurrentUser().getUid();
-        user = fAuth.getCurrentUser();
 
         DocumentReference documentReference = fStore.collection("users").document(userId);
         documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if(documentSnapshot.exists()){
-                    viewnumber.setText(documentSnapshot.getString("number"));
-                    viewname.setText(documentSnapshot.getString("name"));
-                    viewemail.setText(documentSnapshot.getString("email"));
+                    viewnumber.setText(user.getPhoneNumber());
+                    viewname.setText(acct.getDisplayName());
+                    viewemail.setText(userId);
                     viewpost.setText(documentSnapshot.getString("post"));
                     viewabout.setText(documentSnapshot.getString("aboutme"));
+                  //  String Url = documentSnapshot.get().getString("url");
+                   // Picasso.get().load(documentSnapshot.get().getString("imageurl")).into(profileImage);
 
                 }else {
                     Log.d("tag", "onEvent: Document do not exists");
@@ -99,9 +105,10 @@ public class ShowProfile extends AppCompatActivity {
             public void onClick(View v) {
                 // open gallery
                 Intent i = new Intent(v.getContext(),Profile.class);
-                i.putExtra("name",viewname.getText().toString());
-                i.putExtra("email",viewemail.getText().toString());
-                i.putExtra("number",viewnumber.getText().toString());
+                i.putExtra("imageurl",acct.getPhotoUrl());
+                i.putExtra("name",acct.getDisplayName());
+                i.putExtra("email",user.getEmail());
+                i.putExtra("number",user.getPhoneNumber());
                 i.putExtra("post",viewpost.getText().toString());
                 i.putExtra("aboutme",viewabout.getText().toString());
                 startActivity(i);
