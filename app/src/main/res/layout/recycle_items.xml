@@ -30,7 +30,6 @@
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="italic"
         android:textColor="#4AA5D9"
         android:textSize="34sp"
         android:shadowColor="#00ccff"
@@ -44,12 +43,13 @@
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:background="#4FC3F7"
-        android:layout_below="@+id/titleTextView"/>
+        android:layout_below="@+id/titleTextView"
+        android:layout_margin="5dp"/>
     <TextView
         android:id="@+id/dateTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:textSize="15sp"
         android:layout_below="@+id/titleTextView"
         android:fontFamily="sans-serif">
