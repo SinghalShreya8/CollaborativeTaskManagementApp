@@ -9,10 +9,11 @@
     tools:context=".ShowProfile">
 
     <ImageView
+        android:id="@+id/imageViewsp"
         android:layout_width="200dp"
         android:layout_height="150dp"
         android:layout_gravity="center"
-        android:id="@+id/imageViewsp"/>
+        android:background="@drawable/icon" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,6 +28,7 @@
             android:text="Name"
             android:textColor="@android:color/black"
             android:textSize="20sp"
+            android:layout_marginTop="30dp"
             android:layout_marginLeft="30dp"
             android:padding="10dp"
             android:textAlignment="viewStart"
@@ -37,8 +39,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="30dp"
+            android:layout_marginTop="30dp"
             android:padding="10dp"
-            android:text="Name"
+            android:hint="Name"
             android:textAlignment="viewStart"
             android:textSize="20sp" />
 
@@ -65,7 +68,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Email"
+            android:hint="Email"
             android:textSize="20sp"
             android:layout_marginLeft="30dp"
             android:padding="10dp"
@@ -102,7 +105,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Mobile Number"
+            android:hint="Mobile Number"
             android:textSize="20sp"
             android:layout_marginLeft="30dp"
             android:padding="10dp"
@@ -130,7 +133,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Post"
+            android:hint="Post"
             android:textSize="20sp"
             android:layout_marginLeft="30dp"
             android:padding="10dp"
@@ -139,37 +142,34 @@
             />
     </LinearLayout>
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_gravity="center"
-        >
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="About Me"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
             android:layout_marginLeft="30dp"
             android:padding="10dp"
+            android:text="About Me"
             android:textAlignment="viewStart"
-            />
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/aboutsp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="About Me"
-            android:textSize="20sp"
             android:layout_marginLeft="30dp"
+            android:hint="About Me"
             android:padding="10dp"
             android:textAlignment="viewStart"
-            android:id="@+id/aboutsp"
-            />
+            android:textSize="20sp" />
 
     </LinearLayout>
-
 
     <Button
         android:id="@+id/changeprofile"

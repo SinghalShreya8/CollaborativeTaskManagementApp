@@ -1,25 +1,32 @@
 package com.example.taskmanagement;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
+import android.provider.OpenableColumns;
+import android.text.TextUtils;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -30,145 +37,188 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Profile extends AppCompatActivity {
-
-    public static final String TAG = "TAG";
-    EditText pname,pemail,pnumber,ppost,pabout;
-    ImageView profileImageView;
-    Button saveBtn;
-    FirebaseAuth fAuth;
-    FirebaseFirestore fStore;
-    FirebaseUser user;
+    EditText et_name,et_number,et_post,et_email,et_about;
+    Button button;
+    ProgressBar progressBar;
+    private Uri imageUri;
+    private static final int PICK_IMAGE= 1;
+    UploadTask uploadTask;
+    FirebaseStorage firebaseStorage;
     StorageReference storageReference;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    DocumentReference documentReference;
+    ImageView imageView;
+    FirebaseUser user;
+    FirebaseAuth fAuth;
+    String fileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile);
 
-        Intent data = getIntent();
-        String fullName = data.getStringExtra("name");
-        String email = data.getStringExtra("email");
-        String phone = data.getStringExtra("number");
-        String postnow = data.getStringExtra("post");
-        String aboutme = data.getStringExtra("aboutme");
+        imageView = findViewById(R.id.imageview);
+        et_name = findViewById(R.id.name);
+        et_email = findViewById(R.id.email);
+        et_number = findViewById(R.id.number);
+        et_post = findViewById(R.id.post);
+        et_about = findViewById(R.id.about);
+        button = findViewById(R.id.b2);
+        progressBar = findViewById(R.id.progressbar);
 
         fAuth = FirebaseAuth.getInstance();
-        fStore = FirebaseFirestore.getInstance();
         user = fAuth.getCurrentUser();
-        storageReference = FirebaseStorage.getInstance().getReference();
 
-        pname = findViewById(R.id.name);
-        pemail = findViewById(R.id.email);
-        pnumber = findViewById(R.id.number);
-        ppost = findViewById(R.id.post);
-        pabout = findViewById(R.id.about);
-        profileImageView = findViewById(R.id.imageview);
-        saveBtn = findViewById(R.id.b2);
+        documentReference = db.collection("users").document(user.getEmail());
+        storageReference = firebaseStorage.getInstance().getReference("profile_images");
 
-        StorageReference profileRef = storageReference.child("users/"+fAuth.getCurrentUser().getUid()+"/profile images.jpg");
-        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(profileImageView);
+            public void onClick(View view) {
+                UploadData();
             }
         });
-
-        profileImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(openGalleryIntent,1000);
-            }
-        });
-
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(pname.getText().toString().isEmpty() || pemail.getText().toString().isEmpty() || pnumber.getText().toString().isEmpty()|| ppost.getText().toString().isEmpty()|| pabout.getText().toString().isEmpty()){
-                    Toast.makeText(Profile.this, "One or Many fields are empty.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                final String email = pemail.getText().toString();
-                user.updateEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        DocumentReference docRef = fStore.collection("users").document(user.getUid());
-                        Map<String,Object> edited = new HashMap<>();
-                        edited.put("email",email);
-                        edited.put("name",pname.getText().toString());
-                        edited.put("number",pnumber.getText().toString());
-                        edited.put("post",ppost.getText().toString());
-                        edited.put("aboutme",pabout.getText().toString());
-                        docRef.update(edited).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(Profile.this, "Profile Updated", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(Profile.this,MainActivity.class);
-                                startActivity(intent);
-                               // startActivity(new Intent(getApplicationContext(),MainActivity.class));
-                                finish();
-                            }
-                        });
-                        Toast.makeText(Profile.this, "Email is changed.", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(Profile.this,   e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-
-            }
-        });
-
-        pemail.setText(email);
-        pname.setText(fullName);
-        pnumber.setText(phone);
-        ppost.setText(postnow);
-        pabout.setText(aboutme);
-
-        Log.d(TAG, "onCreate: " + fullName + " " + email + " " + phone + " " + postnow + " " + aboutme);
     }
 
+    public void ChooseImage(View view) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent,PICK_IMAGE);
+    }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1000){
-            if(resultCode == Activity.RESULT_OK){
-                Uri imageUri = data.getData();
-
-                //profileImage.setImageURI(imageUri);
-
-                uploadImageToFirebase(imageUri);
-
-
-            }
+        if (requestCode == PICK_IMAGE || resultCode == RESULT_OK ||
+                data != null || data.getData() != null){
+            imageUri = data.getData();
+            fileName =  getFileName(imageUri);
+            Toast.makeText(Profile.this, "Profile Created", Toast.LENGTH_SHORT).show();
+            Picasso.get().load(imageUri).into(imageView);   //Picasso is open sourec library to load images in imageView
+           // Toast.makeText(Profile.this, "Uploading Profile Pic", Toast.LENGTH_SHORT).show();
         }
-
     }
 
-    private void uploadImageToFirebase(Uri imageUri) {
-        // uplaod image to firebase storage
-        final StorageReference fileRef = storageReference.child("users/"+fAuth.getCurrentUser().getUid()+"/profile images.jpg");
-        fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+
+    private String getFileName(Uri uri) throws IllegalArgumentException {
+        // Obtain a cursor with information regarding this uri
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+
+        if (cursor.getCount() <= 0) {
+            cursor.close();
+            throw new IllegalArgumentException("Can't obtain file name, cursor is empty");
+        }
+
+        cursor.moveToFirst();
+        String fileName = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
+        cursor.close();
+        return fileName;
+    }
+
+    private String getFileExt(Uri uri){
+        ContentResolver contentResolver = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return  mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+    }
+
+    private void UploadData(){
+
+        final String name = et_name.getText().toString();
+        final String number= et_number.getText().toString();
+        final String post = et_post.getText().toString();
+        final String about = et_about.getText().toString();
+        //final String email;
+        et_email.setText(user.getEmail());
+
+        if (!TextUtils.isEmpty(name) || !TextUtils.isEmpty(number) || !TextUtils.isEmpty(post) ||
+                !TextUtils.isEmpty(about) || !TextUtils.isEmpty((CharSequence) et_email) || imageUri != null ){
+
+            progressBar.setVisibility(View.VISIBLE);
+            final  StorageReference reference = storageReference.child(fileName);
+            uploadTask = reference.putFile(imageUri);
+
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()){
+                        throw  task.getException();
+                    }
+                    return  reference.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if (task.isSuccessful()){
+                                Uri downloadUri = task.getResult();     //gives downloadUri
+                                Map<String ,String > profile = new HashMap<>();
+                                profile.put("name",name);
+                                profile.put("number",number);
+                                profile.put("email",user.getEmail());
+                                profile.put("post",post);
+                                profile.put("about",about);
+                                profile.put("url",downloadUri.toString());
+
+                                documentReference.set(profile)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                progressBar.setVisibility(View.INVISIBLE);
+                                                Toast.makeText(Profile.this, "Profile Created", Toast.LENGTH_SHORT).show();
+                                                Intent intent = new Intent(Profile.this,ShowProfile.class);
+                                                startActivity(intent);
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(Profile.this, "failed", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                        }
+                    });
+
+        }else {
+            Toast.makeText(this, "All Fields required", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //onStart to check if data exists or not; if data exits it will be retrieved in textview then we edit it
+   @Override
+   protected void onStart() {
+        super.onStart();
+        documentReference.get()
+              .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                   @Override
+                   public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                       if (task.getResult().exists()){
+                           String name_result = task.getResult().getString("name");
+                           String number_result = task.getResult().getString("number");
+                           String email_result = task.getResult().getString("email");
+                           String post_result = task.getResult().getString("post");
+                           String about_result = task.getResult().getString("about");
+                           String Url = task.getResult().getString("url");
+
+                           Picasso.get().load(Url).into(imageView);
+
+                           et_name.setText(name_result);
+                           et_email.setText(email_result);
+                           et_number.setText(number_result);
+                           et_post.setText(post_result);
+                           et_about.setText(about_result);
+                       }else {
+                           Toast.makeText(Profile.this, "No Profile exist", Toast.LENGTH_SHORT).show();
+                      }
+                 }
+              }).addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onSuccess(Uri uri) {
-                        Picasso.get().load(uri).into(profileImageView);
+                    public void onFailure(@NonNull Exception e) {
                     }
                 });
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getApplicationContext(), "Failed.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
 }

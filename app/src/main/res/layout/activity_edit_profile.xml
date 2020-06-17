@@ -10,10 +10,15 @@
     android:orientation="vertical"
 
     android:padding="20dip"
-    tools:context=".Profile">
+    tools:context=".editProfile">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="add new photo or else retains previous one"/>
 
     <ImageView
-        android:id="@+id/imageview"
+        android:id="@+id/editimage"
         android:layout_width="200dp"
         android:layout_height="150dp"
         android:layout_gravity="center"
@@ -22,16 +27,17 @@
         tools:ignore="OnClick" />
 
     <EditText
-        android:id="@+id/name"
+        android:id="@+id/editname"
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="Name"
         android:inputType="textPersonName" />
 
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/editemail"
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:layout_marginBottom="20dp"
@@ -41,7 +47,7 @@
 
 
     <EditText
-        android:id="@+id/number"
+        android:id="@+id/editnumber"
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:layout_marginBottom="20dp"
@@ -50,7 +56,7 @@
         android:inputType="number" />
 
     <EditText
-        android:id="@+id/post"
+        android:id="@+id/editpost"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
@@ -59,7 +65,7 @@
         android:textSize="20dp" />
 
     <EditText
-        android:id="@+id/about"
+        android:id="@+id/editabout"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginBottom="20dp"
@@ -68,17 +74,17 @@
         android:inputType="textShortMessage" />
 
     <Button
-        android:id="@+id/b2"
+        android:id="@+id/editb2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_margin="15dp"
         android:background="@drawable/roundbutton"
-        android:text="Save Profile"
+        android:text="Update Profile"
         android:textColor="@android:color/black" />
 
     <ProgressBar
-        android:id="@+id/progressbar"
+        android:id="@+id/editprogressbar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

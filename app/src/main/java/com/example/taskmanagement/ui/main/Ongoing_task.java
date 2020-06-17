@@ -11,6 +11,7 @@ import com.google.firebase.firestore.Query;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +74,8 @@ public class Ongoing_task extends Fragment {
         emailId = fAuth.getCurrentUser().getEmail();
         t1 = "";
         db = FirebaseFirestore.getInstance();
-        Query query = db.collection("users").document(emailId).collection("ongoingtask");
+        final Query query = db.collection("users").document(emailId).collection("ongoingtask");
+
         FirestoreRecyclerOptions<WonderModel> item = new FirestoreRecyclerOptions.Builder<WonderModel>()
                 .setQuery(query, WonderModel.class)
                 .build();
@@ -81,6 +83,7 @@ public class Ongoing_task extends Fragment {
             @NonNull
             @Override
             public CompletedTaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                //Log.i("query", String.valueOf(query));
                 View view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.recycle_items, parent, false);
                 return new CompletedTaskViewHolder(view);

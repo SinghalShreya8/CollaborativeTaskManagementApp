@@ -28,21 +28,28 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.taskmanagement.ui.main.SectionsPagerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.UploadTask;
 
 public class MainActivity extends AppCompatActivity {
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     DocumentReference documentReference;
+    UploadTask uploadTask;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        documentReference = db.collection("user").document("profile");
+
+        user = mAuth.getCurrentUser();
+        documentReference = db.collection("users").document(user.getEmail());
+
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
@@ -51,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,8 +88,22 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         switch (id){
             case R.id.action_Profile:
-                Intent intent = new Intent(MainActivity.this,ShowProfile.class);
-                startActivity(intent);
+                documentReference.get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if(task.getResult().exists()){
+                                    String name_result = task.getResult().getString("name");
+                                    if(name_result!=null){
+                                        Intent intent = new Intent(MainActivity.this,ShowProfile.class);
+                                        startActivity(intent);
+                                    }else{
+                                        Intent intent = new Intent(MainActivity.this,Profile.class);
+                                        startActivity(intent);
+                                    }
+                                }
+                            }
+                        });
                 return true;
             case R.id.action_Logout:
                 GoogleSignInOptions gso = new GoogleSignInOptions.

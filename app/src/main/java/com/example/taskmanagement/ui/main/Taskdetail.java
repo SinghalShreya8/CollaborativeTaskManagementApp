@@ -65,8 +65,10 @@ public class Taskdetail extends AppCompatActivity {
         String  completedtime=getIntent().getStringExtra("time");
 
         String ar=getIntent().getStringExtra("AcceptReject");
-        if(ar!=null && (ar.equalsIgnoreCase("ar") || ar.equalsIgnoreCase("completed")))
+        if(ar!=null && (ar.equalsIgnoreCase("ar") || ar.equalsIgnoreCase("completed"))){
+            //documentButton.setVisibility(View.GONE);
             completeButton.setVisibility(View.GONE);
+        }
         else
             completeButton.setVisibility(View.VISIBLE);
         TextView t1 = findViewById(R.id.title);
